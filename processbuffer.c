@@ -1,0 +1,46 @@
+#include "processbuffer.h"
+
+LIST_HEAD(outgoing_buffer);
+LIST_HEAD(incoming_buffer);
+
+static DEFINE_SPINLOCK(out_buf_lock);
+static DEFINE_SPINLOCK(inc_buf_lock);
+
+struct message *message_new(long size) {
+    struct message *msg = kmalloc(sizeof(struct message), GFP_KERNEL);
+    msg->data = kmalloc(size, GFP_KERNEL);
+    msg->pid = task_pid_nr(current);
+
+    INIT_LIST_HEAD(&msg->list);
+    return msg;
+}
+
+void message_destroy(struct message *msg) {
+    kfree(msg->data);
+    kfree(msg);
+}
+
+void message_send(struct message *msg) {
+    unsigned long flags;
+    spin_lock_irqsave(&out_buf_lock, flags);
+
+    list_add_tail(&msg->list, &outgoing_buffer);
+
+    spin_unlock_irqrestore(&out_buf_lock, flags);
+}
+
+struct message *message_get(pid_t pid) {
+    struct list_head* tmp;
+    unsigned long flags;
+
+    spin_lock_irqsave(&inc_buf_lock, flags);
+    list_for_each(tmp, &incoming_buffer) {
+        struct message *msg = list_entry(tmp, struct message, list);
+        if (msg->pid == pid) {
+            list_del(&msg->list);
+            return msg;
+        }
+    }
+    spin_unlock_irqrestore(&inc_buf_lock, flags);
+    return NULL;
+}
