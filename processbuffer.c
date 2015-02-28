@@ -29,6 +29,18 @@ void message_send(struct message *msg) {
     spin_unlock_irqrestore(&out_buf_lock, flags);
 }
 
+struct message *message_get_sent() {
+    unsigned long flags;
+    spin_lock_irqsave(&out_buf_lock, flags);
+
+    struct message *msg = list_entry(tmp, struct message, list);
+    list_del(&msg->list);
+
+    spin_unlock_irqrestore(&out_buf_lock, flags);
+
+    return msg;
+}
+
 struct message *message_get(pid_t pid) {
     struct list_head* tmp;
     unsigned long flags;
@@ -43,4 +55,11 @@ struct message *message_get(pid_t pid) {
     }
     spin_unlock_irqrestore(&inc_buf_lock, flags);
     return NULL;
+}
+
+void message_put_incoming(struct message *msg) {
+    unsigned long flags;
+    spin_lock_irqsave(&inc_buf_lock, flags);
+    list_add_tail(&msg->list, &incoming_buffer);
+    spin_unlock_irqrestore(&inc_buf_lock, flags);
 }

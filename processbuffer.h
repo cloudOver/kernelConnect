@@ -38,15 +38,28 @@ struct message *message_new(long size);
 void message_destroy(struct message *msg);
 
 /**
- * @brief message_send Put new message into outgoing buffer
+ * @brief message_send Put new message into outgoing buffer. Used by all
+ * redirected systemcalls acroos the kernel
  * @param msg
  */
 void message_send(struct message *msg);
+
+/**
+ * @brief message_get_sent get one message awaiting in outgoing buffer. Used in
+ * device functions.
+ */
+struct message *message_get_sent();
 
 /**
  * @brief message_get Get message from buffer and remove it from buffer
  * @return  pointer to message or null, if there is no new message
  */
 struct message *message_get(pid_t pid);
+
+/**
+ * @brief message_put_incoming adds new message to incoming buffer
+ * @param msg pointer to message
+ */
+void message_put_incoming(struct message *msg);
 
 #endif // PROCESSBUFFER_H
