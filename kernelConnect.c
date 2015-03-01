@@ -4,8 +4,16 @@
 #include <processbuffer.h>
 #include <clouddev.h>
 
-MODULE_LICENSE("GPL");
-
 static int kernelConnect_init() {
     device_init();
 }
+
+static void kernelConnect_cleanup() {
+    device_cleanup();
+}
+
+
+module_init(kernelConnect_init);
+module_cleanup(kernelConnect_cleanup);
+
+MODULE_LICENSE("GPL");

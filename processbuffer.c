@@ -8,6 +8,9 @@ static DEFINE_SPINLOCK(inc_buf_lock);
 
 struct message *message_new(long size) {
     struct message *msg = kmalloc(sizeof(struct message), GFP_KERNEL);
+    if (msg == NULL)
+        return NULL;
+
     msg->data = kmalloc(size, GFP_KERNEL);
     msg->pid = task_pid_nr(current);
 
@@ -33,7 +36,7 @@ struct message *message_get_sent() {
     unsigned long flags;
     spin_lock_irqsave(&out_buf_lock, flags);
 
-    struct message *msg = list_entry(tmp, struct message, list);
+    struct message *msg = list_entry(&outgoing_buffer, struct message, list);
     list_del(&msg->list);
 
     spin_unlock_irqrestore(&out_buf_lock, flags);
@@ -41,10 +44,12 @@ struct message *message_get_sent() {
     return msg;
 }
 
-struct message *message_get(pid_t pid) {
+struct message *message_get() {
     struct list_head* tmp;
     unsigned long flags;
+    pid_t pid;
 
+    pid = task_pid_nr(current);
     spin_lock_irqsave(&inc_buf_lock, flags);
     list_for_each(tmp, &incoming_buffer) {
         struct message *msg = list_entry(tmp, struct message, list);

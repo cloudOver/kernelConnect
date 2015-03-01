@@ -54,7 +54,7 @@ struct message *message_get_sent();
  * @brief message_get Get message from buffer and remove it from buffer
  * @return  pointer to message or null, if there is no new message
  */
-struct message *message_get(pid_t pid);
+struct message *message_get();
 
 /**
  * @brief message_put_incoming adds new message to incoming buffer

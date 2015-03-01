@@ -2,6 +2,11 @@
 
 static ssize_t dev_read(struct file *filp, char __user *data, size_t size, loff_t *offset) {
     struct message *msg = message_get_sent();
+    if (msg == NULL) {
+        printk(KERN_CRIT "cannot allocate new message\n");
+        return -EAGAIN;
+    }
+
     if (msg->size > size) {
         return -EAGAIN;
     }
@@ -12,9 +17,9 @@ static ssize_t dev_read(struct file *filp, char __user *data, size_t size, loff_
 
 static ssize_t dev_write(struct file *filp, const char __user *data, size_t size, loff_t *offset) {
     struct message *msg = message_new(size);
-    message_put_incoming(msg);
     copy_from_user(msg->data, data, size);
-
+    message_put_incoming(msg);
+    return size;
 }
 
 int dev_open(struct inode *inp, struct file *filp) {
