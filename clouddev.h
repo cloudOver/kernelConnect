@@ -2,8 +2,9 @@
 #define CLOUDDEV_H
 
 #include <linux/fs.h>
-#include <processbuffer.h>
+#include <asm-generic/uaccess.h>
 #include <asm/errno.h>
+#include <processbuffer.h>
 
 int device_init();
 void device_cleanup();

@@ -16,8 +16,10 @@ static ssize_t dev_read(struct file *filp, char __user *data, size_t size, loff_
 }
 
 static ssize_t dev_write(struct file *filp, const char __user *data, size_t size, loff_t *offset) {
-    struct message *msg = message_new(size);
-    copy_from_user(msg->data, data, size);
+    void *msg_data = kmalloc(size, GFP_KERNEL);
+    copy_from_user(msg_data, data, size);
+    struct message *msg = message_new(msg_data, size);
+
     message_put_incoming(msg);
     return size;
 }
