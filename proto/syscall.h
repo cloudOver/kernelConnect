@@ -3,6 +3,7 @@
 
 #include <processbuffer.h>
 #include <linux/module.h>
+#include <linux/sched.h>
 #include <asm-generic/uaccess.h>
 
 #define CO_PARAM_COUNT 6

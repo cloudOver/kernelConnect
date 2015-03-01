@@ -24,23 +24,15 @@ extern struct list_head incoming_buffer;
 
 
 /**
- * @brief message_new_alloc allocate new message struct and its data
- * @param size size of the data in the message
- * @return new message
- */
-struct message *message_new_alloc(long size);
-
-/**
  * @brief message_new allocate new message and assign given data to it
  * @param size size of data
  * @param data pointer to data
  * @return new message
  */
-struct message *message_new(long size, void *data);
+struct message *message_new(void *data, long size);
 
 /**
- * @brief message_destroy destroys message allocated by message_new and its data
- * even if it was created via message_new (without allocating)
+ * @brief message_destroy destroys message allocated by message_new
  * @param msg pointer to message object
  */
 void message_destroy(struct message *msg);

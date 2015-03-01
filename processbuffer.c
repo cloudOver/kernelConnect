@@ -6,17 +6,14 @@ LIST_HEAD(incoming_buffer);
 static DEFINE_SPINLOCK(out_buf_lock);
 static DEFINE_SPINLOCK(inc_buf_lock);
 
-struct message *message_new_alloc(long size) {
-    void *data = kmalloc(size, GFP_KERNEL);
-    message_new(size, data);
-}
 
-struct message *message_new(long size, void *data) {
+struct message *message_new(void *data, long size) {
     struct message *msg = kmalloc(sizeof(struct message), GFP_KERNEL);
     if (msg == NULL)
         return NULL;
 
     msg->data = data;
+    msg->size = size;
     msg->pid = task_pid_nr(current);
 
     INIT_LIST_HEAD(&msg->list);
@@ -24,7 +21,6 @@ struct message *message_new(long size, void *data) {
 }
 
 void message_destroy(struct message *msg) {
-    kfree(msg->data);
     kfree(msg);
 }
 
