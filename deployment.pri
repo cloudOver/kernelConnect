@@ -192,9 +192,11 @@ export (QMAKE_EXTRA_TARGETS)
 SOURCES += \
     $$PWD/kernelConnect.c \
     $$PWD/processbuffer.c \
-    $$PWD/clouddev.c
+    $$PWD/clouddev.c \
+    $$PWD/proto/syscall.c
 
 HEADERS += \
     $$PWD/processbuffer.h \
-    $$PWD/clouddev.h
+    $$PWD/clouddev.h \
+    $$PWD/proto/syscall.h
 
