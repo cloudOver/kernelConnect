@@ -193,7 +193,8 @@ SOURCES += \
     $$PWD/kernelConnect.c \
     $$PWD/processbuffer.c \
     $$PWD/clouddev.c \
-    $$PWD/proto/syscall.c
+    $$PWD/proto/syscall.c \
+    $$PWD/testthread.c
 
 HEADERS += \
     $$PWD/processbuffer.h \
