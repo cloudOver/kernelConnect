@@ -12,6 +12,8 @@ static ssize_t dev_read(struct file *filp, char __user *data, size_t size, loff_
     }
 
     copy_to_user(data, msg->data, size);
+
+    // TODO: free message data
     return size;
 }
 

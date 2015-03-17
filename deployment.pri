@@ -199,5 +199,6 @@ SOURCES += \
 HEADERS += \
     $$PWD/processbuffer.h \
     $$PWD/clouddev.h \
-    $$PWD/proto/syscall.h
+    $$PWD/proto/syscall.h \
+    $$PWD/testthread.h
 
