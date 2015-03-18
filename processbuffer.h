@@ -48,13 +48,13 @@ void message_send(struct message *msg);
  * @brief message_get_sent get one message awaiting in outgoing buffer. Used in
  * device functions.
  */
-struct message *message_get_sent();
+struct message *message_get_sent(void);
 
 /**
  * @brief message_get Get message from buffer and remove it from buffer
  * @return  pointer to message or null, if there is no new message
  */
-struct message *message_get();
+struct message *message_get(void);
 
 /**
  * @brief message_put_incoming adds new message to incoming buffer

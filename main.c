@@ -1,24 +1,28 @@
+#include <linux/module.h>
+#include <linux/init.h>
+#include <linux/kthread.h>
+
 MODULE_AUTHOR("Maciej Nabozny <mn@mnabozny.pl>");
 MODULE_DESCRIPTION("CloudOver kernel driver");
 MODULE_LICENSE("GPL");
 MODULE_VERSION("0.1");
 
-
-#include <linux/module.h>
-#include <linux/init.h>
-
 #include <processbuffer.h>
 #include <clouddev.h>
 #include <testthread.h>
 
-static task_struct *thread = NULL;
+static struct task_struct *thread = NULL;
 
 static int kernelConnect_init() {
+    printk(KERN_ALERT "initializing...\n");
     device_init();
     thread = test_init();
+
+    return 0;
 }
 
 static void kernelConnect_cleanup() {
+    printk(KERN_ALERT "cleanup...\n");
     device_cleanup();
     test_cleanup(thread);
 }

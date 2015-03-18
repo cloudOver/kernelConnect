@@ -190,11 +190,11 @@ export (QMAKE_EXTRA_TARGETS)
 }
 
 SOURCES += \
-    $$PWD/kernelConnect.c \
     $$PWD/processbuffer.c \
     $$PWD/clouddev.c \
     $$PWD/proto/syscall.c \
-    $$PWD/testthread.c
+    $$PWD/testthread.c \
+    $$PWD/main.c
 
 HEADERS += \
     $$PWD/processbuffer.h \
