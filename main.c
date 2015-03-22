@@ -15,18 +15,18 @@ static struct task_struct *thread = NULL;
 
 int kernelConnect_init(void) {
     printk(KERN_ALERT "initializing...\n");
-//    device_init();
-//    thread = test_init();
+    device_init();
+    thread = test_init();
 
     return 0;
 }
 
-void kernelConnect_cleanup(void) {
+void kernelConnect_exit(void) {
     printk(KERN_ALERT "cleanup...\n");
-//    device_cleanup();
-//    test_cleanup(thread);
+    device_cleanup();
+    test_cleanup(thread);
 }
 
 
 module_init(kernelConnect_init);
-module_cleanup(kernelConnect_cleanup);
+module_exit(kernelConnect_exit);
