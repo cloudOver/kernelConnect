@@ -14,7 +14,6 @@ MODULE_VERSION("0.1");
 static struct task_struct *thread = NULL;
 
 int kernelConnect_init(void) {
-    printk(KERN_ALERT "initializing...\n");
     device_init();
     thread = test_init();
 
@@ -22,7 +21,6 @@ int kernelConnect_init(void) {
 }
 
 void kernelConnect_exit(void) {
-    printk(KERN_ALERT "cleanup...\n");
     device_cleanup();
     test_cleanup(thread);
 }

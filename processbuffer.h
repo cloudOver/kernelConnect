@@ -14,7 +14,7 @@
  */
 struct message {
     int pid;
-    long size;
+    unsigned long size;
     void *data;
     struct list_head list;
 };
@@ -29,7 +29,7 @@ extern struct list_head incoming_buffer;
  * @param data pointer to data
  * @return new message
  */
-struct message *message_new(void *data, long size);
+struct message *message_new(void *data, unsigned long size);
 
 /**
  * @brief message_destroy destroys message allocated by message_new

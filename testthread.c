@@ -1,6 +1,7 @@
 #include <testthread.h>
 
 static int thread_count = 0;
+char str[] = "Hello world!";
 
 struct task_struct *test_init() {
     static struct task_struct *test_thread;
@@ -11,12 +12,13 @@ struct task_struct *test_init() {
 }
 
 void test_send(void *data) {
-    printk(KERN_INFO "test_send: sending message\n");
-    char str[] = "Hello world!";
-    struct message *msg = message_new((void *) str, strlen(str));
+    int len = strlen(str);
+
+    printk(KERN_INFO "test_send: sending message (%d bytes, at %p)\n", len, str);
+    struct message *msg = message_new((void *) str, len);
     message_send(msg);
 
-    printk(KERN_INFO "test_send: message has been sent\n");
+    printk(KERN_INFO "test_send: message has been sent (%u bytes, at %p)\n", msg->size, msg->data);
 
     // kthread_should_stop...
     return;

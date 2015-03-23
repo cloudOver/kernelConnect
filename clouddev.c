@@ -5,11 +5,12 @@ static ssize_t dev_read(struct file *filp, char __user *data, size_t size, loff_
 
     struct message *msg = message_get_sent();
     if (msg == NULL) {
-        printk(KERN_CRIT "cannot get next message\n");
+        printk(KERN_CRIT "dev_read: cannot get next message\n");
         return -EAGAIN;
     }
 
     if (msg->size > size) {
+        printk(KERN_INFO "dev_read: not enough space to copy message (%d). Message is %ud\n", size, msg->size);
         return -EAGAIN;
     }
 
