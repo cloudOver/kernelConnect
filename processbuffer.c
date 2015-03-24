@@ -22,6 +22,7 @@ struct message *message_new(void *data, unsigned long size) {
 }
 
 void message_destroy(struct message *msg) {
+    //kfree(msg->data);
     kfree(msg);
 }
 
@@ -78,6 +79,7 @@ struct message *message_get() {
 void message_put_incoming(struct message *msg) {
     unsigned long flags;
     spin_lock_irqsave(&inc_buf_lock, flags);
+    printk(KERN_DEBUG "message_put_incoming: received new message for PID %d at %p\n", msg->pid, msg->data);
     list_add_tail(&msg->list, &incoming_buffer);
     spin_unlock_irqrestore(&inc_buf_lock, flags);
 }

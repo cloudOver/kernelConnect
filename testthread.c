@@ -20,6 +20,12 @@ void test_send(void *data) {
         message_send(msg);
 
         printk(KERN_INFO "test_send: message has been sent (%u bytes, at %p)\n", msg->size, msg->data);
+
+
+        struct message *incoming = message_get();
+        if (incoming != NULL) {
+            printk(KERN_INFO "test_send: received new message for pid: %d, data at: %p\n", incoming->pid, incoming->data);
+        }
         msleep(5000);
     }
     // kthread_should_stop...

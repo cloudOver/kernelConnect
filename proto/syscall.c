@@ -24,7 +24,6 @@ void co_syscall_serialize(struct co_syscall_context *ctx) {
     struct message *msg = message_new(ctx->syscall, sizeof(struct co_syscall_data));
     //TODO: Check return value
     message_send(msg);
-    message_destroy(msg);
     int i;
     for (i = 0; i < CO_PARAM_COUNT; i++) {
         // Serialize required params (READ and BOTH directions)
@@ -34,7 +33,6 @@ void co_syscall_serialize(struct co_syscall_context *ctx) {
             msg = message_new((void*)ctx->syscall->param[i], ctx->syscall->param_size[i]);
             //TODO: Check return vlue
             message_send(msg);
-            message_destroy(msg);
         }
     }
 }

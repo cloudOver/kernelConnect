@@ -1,12 +1,13 @@
 #include "clouddev.h"
 
+
 static ssize_t dev_read(struct file *filp, char __user *data, size_t size, loff_t *offset) {
     printk(KERN_DEBUG "dev_read: read\n");
 
     struct message *msg = message_get_sent();
     if (msg == NULL) {
         printk(KERN_CRIT "dev_read: cannot get next message\n");
-        return -EAGAIN;
+        return 0;
     }
 
     if (msg->size > size) {
@@ -16,15 +17,21 @@ static ssize_t dev_read(struct file *filp, char __user *data, size_t size, loff_
 
     copy_to_user(data, msg->data, msg->size);
 
-    // TODO: free message's data
+    message_destroy(msg);
     return size;
 }
+
 
 static ssize_t dev_write(struct file *filp, const char __user *data, size_t size, loff_t *offset) {
     printk(KERN_DEBUG "dev_write: write\n");
     void *msg_data = kmalloc(size, GFP_KERNEL);
-    copy_from_user(msg_data, data, size);
+
     struct message *msg = message_new(msg_data, size);
+
+    printk(KERN_DEBUG "Message pid size: %d\n", sizeof(msg->pid));
+
+    copy_from_user(&msg->pid, data, sizeof(msg->pid));
+    copy_from_user(&msg->data, data + sizeof(msg->pid), size - sizeof(msg->pid));
 
     message_put_incoming(msg);
     return size;
@@ -60,5 +67,5 @@ int device_init() {
 }
 
 void device_cleanup() {
-    unregister_chrdev(99, "kernelconnect");
+    unregister_chrdev(109, "kernelconnect");
 }
