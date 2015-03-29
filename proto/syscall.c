@@ -1,6 +1,6 @@
 #include <proto/syscall.h>
 
-struct co_syscall_context* co_syscall_initialize(char *path) {
+struct co_syscall_context* co_syscall_initialize() {
     struct co_syscall_context *ctx = (struct co_syscall_context*) kmalloc(sizeof(struct co_syscall_context), GFP_KERNEL);
     if (ctx == NULL) {
         printk(KERN_CRIT "co_syscall_initialize: cannot allocate memory");
@@ -19,19 +19,17 @@ void co_syscall_cleanup(struct co_syscall_context *ctx) {
 }
 
 void co_syscall_serialize(struct co_syscall_context *ctx) {
-    printk(LOG_INFO, "co_syscall_serialize: serializing syscall %ld", ctx->syscall_id);
+    printk(KERN_DEBUG "co_syscall_serialize: serializing syscall %ld", ctx->syscall_id);
 
     struct message *msg = message_new(ctx->syscall, sizeof(struct co_syscall_data));
-    //TODO: Check return value
     message_send(msg);
     int i;
     for (i = 0; i < CO_PARAM_COUNT; i++) {
         // Serialize required params (READ and BOTH directions)
         if (ctx->syscall->param_mode[i] == CO_PARAM_WRITE || ctx->syscall->param_mode[i] == CO_PARAM_BOTH) {
-            printk(KERN_INFO "co_syscall_serialize: \tsending parameter %d (%ld bytes)\n", i, ctx->syscall->param_size[i]);
+            printk(KERN_DEBUG "co_syscall_serialize: \tsending parameter %d (%ld bytes)\n", i, ctx->syscall->param_size[i]);
 
             msg = message_new((void*)ctx->syscall->param[i], ctx->syscall->param_size[i]);
-            //TODO: Check return vlue
             message_send(msg);
         }
     }
@@ -39,26 +37,28 @@ void co_syscall_serialize(struct co_syscall_context *ctx) {
 
 int co_syscall_deserialize(struct co_syscall_context *ctx) {
     struct message *msg;
-    while (msg = message_get() == NULL) {
-        printk(KERN_INFO "co_syscall_deserialize: no new messages. Waiting...\n");
-        schedule();
-    }
+    msg = message_get();
 
     ctx->syscall_id += 1;
-    printk(KERN_INFO "co_syscall_deserialize: received syscall: %ld\n", ctx->syscall->syscall_num);
+    printk(KERN_DEBUG "co_syscall_deserialize: received syscall: %ld\n", ctx->syscall->syscall_num);
 
     int i;
     for (i = 0; i < CO_PARAM_COUNT; i++) {
         if (ctx->syscall->param_mode[i] != CO_PARAM_VALUE) {
-            syslog(LOG_DEBUG, "co_syscall_serialize: \tallocating memory for param %d (%ld bytes)", i, ctx->syscall->param_size[i]);
+            printk(KERN_ALERT "co_syscall_serialize: \tallocating memory for param %d (%ld bytes)\n", i, ctx->syscall->param_size[i]);
             ctx->syscall->param[i] = (unsigned long) kmalloc(ctx->syscall->param_size[i], GFP_KERNEL);
         }
 
-        if (ctx->syscall->param_mode[i] == CO_PARAM_WRITE || ctx->syscall->param_mode[i] == CO_PARAM_BOTH) {
-            syslog(LOG_DEBUG, "co_syscall_serialize: \treceiving parameter %d", i);
-            zmq_recv(ctx->zmq_sock, (void *)ctx->syscall->param[i], ctx->syscall->param_size[i], 0);
+        if (ctx->syscall->param_mode[i] == CO_PARAM_READ || ctx->syscall->param_mode[i] == CO_PARAM_BOTH) {
+            printk(KERN_DEBUG "co_syscall_serialize: \treceiving parameter %d", i);
+            //zmq_recv(ctx->zmq_sock, (void *)ctx->syscall->param[i], ctx->syscall->param_size[i], 0);
+            //message_new((void *)ctx->syscall->param[i], ctx->syscall->param_size[i]);
+            struct message *msg = message_get();
+            ctx->syscall->param[i] = msg->data;
+            ctx->syscall->param_size[i] = msg->size;
+            kfree(msg);
         }
     }
-    unlock_and_log("syscall_deserialize", &ctx->lock);
+
     return ctx->syscall_id;
 }

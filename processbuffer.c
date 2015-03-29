@@ -22,7 +22,7 @@ struct message *message_new(void *data, unsigned long size) {
 }
 
 void message_destroy(struct message *msg) {
-    //kfree(msg->data);
+    kfree(msg->data);
     kfree(msg);
 }
 
@@ -63,14 +63,19 @@ struct message *message_get() {
     pid_t pid;
 
     pid = task_pid_nr(current);
-    spin_lock_irqsave(&inc_buf_lock, flags);
-    list_for_each(tmp, &incoming_buffer) {
-        struct message *msg = list_entry(tmp, struct message, list);
-        if (msg->pid == pid) {
-            printk(KERN_DEBUG "message_get: found message for pid %d at %p with data at %p\n", pid, msg, msg->data);
-            list_del(&msg->list);
-            return msg;
+    while (1) {
+        spin_lock_irqsave(&inc_buf_lock, flags);
+        list_for_each(tmp, &incoming_buffer) {
+            struct message *msg = list_entry(tmp, struct message, list);
+            if (msg->pid == pid) {
+                printk(KERN_DEBUG "message_get: found message for pid %d at %p with data at %p\n", pid, msg, msg->data);
+                list_del(&msg->list);
+                spin_unlock_irqrestore(&inc_buf_lock, flags);
+                return msg;
+            }
         }
+        spin_unlock_irqrestore(&inc_buf_lock, flags);
+        schedule();
     }
     spin_unlock_irqrestore(&inc_buf_lock, flags);
     return NULL;

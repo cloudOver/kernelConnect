@@ -28,7 +28,6 @@ struct co_syscall_data {
     long param[CO_PARAM_COUNT];
     unsigned long param_size[CO_PARAM_COUNT];
     enum co_syscall_param_mode param_mode[CO_PARAM_COUNT];
-    void *param_data[CO_PARAM_COUNT];
 
     int ret_code;
 };
@@ -43,7 +42,7 @@ struct co_syscall_context {
  * @param sock Zmq socket for system calls
  * @return Returns new context structure
  */
-extern struct co_syscall_context* co_syscall_initialize(char *path);
+extern struct co_syscall_context* co_syscall_initialize();
 
 /**
  * @brief co_syscall_cleanup
