@@ -1,5 +1,23 @@
-#include <proto/syscall.h>
+/**
+Copyright (c) 2015 Maciej Nabozny
 
+This file is part of KernelConnect project.
+
+KernelConnect is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+KernelConnect is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with KernelConnect.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#include <proto/syscall.h>
 
 long cloudover_truncate(void *path, long length) {
     printk(KERN_INFO "cloudover_truncate\n");
@@ -40,6 +58,7 @@ long cloudover_access(void *filename, int mode, int flags) {
     return ret;
 }
 
+
 long cloudover_open(void *path, int mode, int flags) {
     printk(KERN_ALERT"open\n");
     char _path[4096];
@@ -49,6 +68,7 @@ long cloudover_open(void *path, int mode, int flags) {
     int params_dir[6] = {DIRECTION_to_kernel, DIRECTION_parameter, DIRECTION_parameter};
     return cloudover_rpc_call(__NR_open, 3, params, params_size, params_dir);
 }
+
 
 long cloudover_close(int fd) {
     printk(KERN_ALERT"close\n");

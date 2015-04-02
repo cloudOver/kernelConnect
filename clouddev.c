@@ -1,5 +1,23 @@
-#include "clouddev.h"
+/**
+Copyright (c) 2015 Maciej Nabozny
 
+This file is part of KernelConnect project.
+
+KernelConnect is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+KernelConnect is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with KernelConnect.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#include "clouddev.h"
 
 static ssize_t dev_read(struct file *filp, char __user *data, size_t size, loff_t *offset) {
     printk(KERN_DEBUG "dev_read: read\n");
