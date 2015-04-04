@@ -20,11 +20,11 @@ along with KernelConnect.  If not, see <http://www.gnu.org/licenses/>.
 #include <proto/syscall.h>
 
 long cloudover_truncate(void *path, long length) {
-    printk(KERN_INFO "cloudover_truncate\n");
+    printk(KERN_DEBUG "cloudover_truncate\n");
     struct co_syscall_context *ctx = co_syscall_initialize();
 
     char *_path = kmalloc(4096, GFP_KERNEL);
-    copy_from_user(_path, path, 4096);
+    strncpy_from_user(_path, path, 4096);
     ctx->syscall->param[0] = _path;
     ctx->syscall->param_mode[0] = CO_PARAM_WRITE;
     ctx->syscall->param_size[0] = strlen(_path);
@@ -32,48 +32,77 @@ long cloudover_truncate(void *path, long length) {
     ctx->syscall->param[1] = length;
     ctx->syscall->param_mode[1] = CO_PARAM_VALUE;
 
+    //TODO: syscall num
+
     co_syscall_serialize(ctx);
     co_syscall_deserialize(ctx);
     printk(KERN_DEBUG "cloudover_truncate: return %d\n", ctx->syscall->ret_code);
     return ctx->syscall->ret_code;
 }
 
-long cloudover_access(void *filename, int mode, int flags) {
-    printk(KERN_ALERT"access\n");
-    char _filename[4096];
-    printk(KERN_ALERT"copy\n");
-    copy_from_user(_filename, filename, 4096);
-    _filename[4095] = 0x00;
+long cloudover_access(void *path, int mode, int flags) {
+    printk(KERN_DEBUG "cloudover_access\n");
+    struct co_syscall_context *ctx = co_syscall_initialize();
 
-    unsigned long int params[6] = {(unsigned long int) _filename, mode, flags};
-    unsigned long int params_size[6] = {strlen(_filename), 0x00, 0x00};
+    char *_path = kmalloc(4096, GFP_KERNEL);
+    strncpy_from_user(_path, path, 4096);
 
-    printk(KERN_ALERT"directions\n");
-    int params_dir[6] = {DIRECTION_to_kernel, DIRECTION_parameter, DIRECTION_parameter};
+    ctx->syscall->param[0] = _path;
+    ctx->syscall->param_mode[0] = CO_PARAM_WRITE;
+    ctx->syscall->param_size[0] = strlen(_path);
 
-    printk(KERN_ALERT"call\n");
-    int ret = cloudover_rpc_call(__NR_access, 2, params, params_size, params_dir);
+    ctx->syscall->param[1] = mode;
+    ctx->syscall->param_mode[1] = CO_PARAM_VALUE;
 
-    printk(KERN_ALERT"return\n");
-    return ret;
+    ctx->syscall->param[2] = flags;
+    ctx->syscall->param_mode[2] = CO_PARAM_VALUE;
+
+    //TODO: syscall num
+
+    co_syscall_serialize(ctx);
+    co_syscall_deserialize(ctx);
+    printk(KERN_DEBUG "cloudover_access: return %d\n", ctx->syscall->ret_code);
+    return ctx->syscall->ret_code;
 }
 
 
 long cloudover_open(void *path, int mode, int flags) {
-    printk(KERN_ALERT"open\n");
-    char _path[4096];
-    copy_from_user(_path, path, 4096);
-    unsigned long int params[6] = {(unsigned long int)_path, mode, flags};
-    unsigned long int params_size[6] = {strlen(_path)};
-    int params_dir[6] = {DIRECTION_to_kernel, DIRECTION_parameter, DIRECTION_parameter};
-    return cloudover_rpc_call(__NR_open, 3, params, params_size, params_dir);
+    printk(KERN_DEBUG "cloudover_open\n");
+    struct co_syscall_context *ctx = co_syscall_initialize();
+
+    char *_path = kmalloc(4096, GFP_KERNEL);
+    strncpy_from_user(_path, path, 4096);
+
+    ctx->syscall->param[0] = _path;
+    ctx->syscall->param_mode[0] = CO_PARAM_WRITE;
+    ctx->syscall->param_size[0] = strlen(_path);
+
+    ctx->syscall->param[1] = mode;
+    ctx->syscall->param_mode[1] = CO_PARAM_VALUE;
+
+    ctx->syscall->param[2] = flags;
+    ctx->syscall->param_mode[2] = CO_PARAM_VALUE;
+
+    //TODO: syscall num
+
+    co_syscall_serialize(ctx);
+    co_syscall_deserialize(ctx);
+    printk(KERN_DEBUG "cloudover_open: return %d\n", ctx->syscall->ret_code);
+    return ctx->syscall->ret_code;
 }
 
 
 long cloudover_close(int fd) {
-    printk(KERN_ALERT"close\n");
-    unsigned long int params[6] = {fd};
-    unsigned long int params_size[6] = {0x00};
-    int params_dir[6] = {DIRECTION_parameter};
-    return cloudover_rpc_call(__NR_close, 1, params, params_size, params_dir);
+    printk(KERN_DEBUG "cloudover_close\n");
+    struct co_syscall_context *ctx = co_syscall_initialize();
+
+    ctx->syscall->param[0] = fd;
+    ctx->syscall->param_mode[0] = CO_PARAM_VALUE;
+
+    //TODO: syscall num
+
+    co_syscall_serialize(ctx);
+    co_syscall_deserialize(ctx);
+    printk(KERN_DEBUG "cloudover_close: return %d\n", ctx->syscall->ret_code);
+    return ctx->syscall->ret_code;
 }
