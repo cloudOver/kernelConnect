@@ -1,5 +1,5 @@
 obj-m += kernelConnect.o
-kernelConnect-objs := processbuffer.o clouddev.o testthread.o main.o proto/syscall.o syscalls/open.o
+kernelConnect-objs := processbuffer.o clouddev.o testthread.o syscall.o main.o proto/syscall.o syscalls/open.o
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
 

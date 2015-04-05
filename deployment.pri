@@ -195,11 +195,15 @@ SOURCES += \
     $$PWD/proto/syscall.c \
     $$PWD/testthread.c \
     $$PWD/main.c \
-    $$PWD/syscalls/open.c
+    $$PWD/syscalls/open.c \
+    $$PWD/syscalls/read_write.c \
+    $$PWD/syscalls/stat.c \
+    $$PWD/syscall.c
 
 HEADERS += \
     $$PWD/processbuffer.h \
     $$PWD/clouddev.h \
     $$PWD/proto/syscall.h \
-    $$PWD/testthread.h
+    $$PWD/testthread.h \
+    $$PWD/syscall.h
 

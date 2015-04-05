@@ -29,6 +29,7 @@ MODULE_VERSION("0.1");
 #include <processbuffer.h>
 #include <clouddev.h>
 #include <testthread.h>
+#include <syscall.h>
 
 static struct task_struct *thread = NULL;
 

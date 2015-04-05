@@ -32,7 +32,7 @@ long cloudover_truncate(void *path, long length) {
     ctx->syscall->param[1] = length;
     ctx->syscall->param_mode[1] = CO_PARAM_VALUE;
 
-    //TODO: syscall num
+    ctx->syscall->syscall_num = __NR_truncate;
 
     co_syscall_serialize(ctx);
     co_syscall_deserialize(ctx);
@@ -57,7 +57,7 @@ long cloudover_access(void *path, int mode, int flags) {
     ctx->syscall->param[2] = flags;
     ctx->syscall->param_mode[2] = CO_PARAM_VALUE;
 
-    //TODO: syscall num
+    ctx->syscall->syscall_num = __NR_access;
 
     co_syscall_serialize(ctx);
     co_syscall_deserialize(ctx);
@@ -83,7 +83,7 @@ long cloudover_open(void *path, int mode, int flags) {
     ctx->syscall->param[2] = flags;
     ctx->syscall->param_mode[2] = CO_PARAM_VALUE;
 
-    //TODO: syscall num
+    ctx->syscall->syscall_num = __NR_open;
 
     co_syscall_serialize(ctx);
     co_syscall_deserialize(ctx);
@@ -99,8 +99,7 @@ long cloudover_close(int fd) {
     ctx->syscall->param[0] = fd;
     ctx->syscall->param_mode[0] = CO_PARAM_VALUE;
 
-    ctx->syscall->syscall_num = __NR_open;
-    //TODO: syscall num
+    ctx->syscall->syscall_num = __NR_close;
 
     co_syscall_serialize(ctx);
     co_syscall_deserialize(ctx);
