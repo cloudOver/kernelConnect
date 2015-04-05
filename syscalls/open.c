@@ -99,6 +99,7 @@ long cloudover_close(int fd) {
     ctx->syscall->param[0] = fd;
     ctx->syscall->param_mode[0] = CO_PARAM_VALUE;
 
+    ctx->syscall->syscall_num = __NR_open;
     //TODO: syscall num
 
     co_syscall_serialize(ctx);
