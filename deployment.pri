@@ -205,5 +205,14 @@ HEADERS += \
     $$PWD/clouddev.h \
     $$PWD/proto/syscall.h \
     $$PWD/testthread.h \
-    $$PWD/syscall.h
+    $$PWD/syscall.h \
+    $$PWD/syscalls-kernel.h \
+    $$PWD/syscalls-cloudover.h \
+    $$PWD/patch/linux/sched.h \
+    $$PWD/patch/linux/syscalls-cloudover.h \
+    $$PWD/patch/linux/syscalls.h
+
+OTHER_FILES += \
+    $$PWD/patch/linux/sched.patch \
+    $$PWD/patch/linux/syscalls.patch
 

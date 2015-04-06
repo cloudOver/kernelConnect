@@ -1,0 +1,10 @@
+--- syscalls-kernel.h	2015-04-06 18:19:43.000000000 +0200
++++ syscalls.h	2015-04-06 18:22:32.000000000 +0200
+@@ -205,6 +205,7 @@
+ 	}								\
+ 	static inline long SYSC##name(__MAP(x,__SC_DECL,__VA_ARGS__))
+ 
++#include <linux/syscalls-cloudover.h>
+ asmlinkage long sys32_quotactl(unsigned int cmd, const char __user *special,
+ 			       qid_t id, void __user *addr);
+ asmlinkage long sys_time(time_t __user *tloc);
