@@ -14,6 +14,12 @@
 #undef SYSCALL_DEFINEx
 #endif
 
+#ifdef SYSCALL_DEFINEx
+#error "SYSCALL_DEFINEx is still defined!"
+#else
+#error "Syscall not defined"
+#endif
+
 #define __SYSCALL_DEFINEx(x, name, ...)                                 \
     asmlinkage long sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))           \
         __attribute__((alias(__stringify(SyS##name))));                 \

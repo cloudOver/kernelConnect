@@ -186,26 +186,39 @@ extern struct trace_event_functions exit_syscall_print_funcs;
 #define SYSCALL_DEFINE5(name, ...) SYSCALL_DEFINEx(5, _##name, __VA_ARGS__)
 #define SYSCALL_DEFINE6(name, ...) SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
 
-#define SYSCALL_DEFINEx(x, sname, ...)				\
-	SYSCALL_METADATA(sname, x, __VA_ARGS__)			\
-	__SYSCALL_DEFINEx(x, sname, __VA_ARGS__)
 
-#define __PROTECT(...) asmlinkage_protect(__VA_ARGS__)
-#define __SYSCALL_DEFINEx(x, name, ...)					\
-	asmlinkage long sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))	\
-		__attribute__((alias(__stringify(SyS##name))));		\
-	static inline long SYSC##name(__MAP(x,__SC_DECL,__VA_ARGS__));	\
-	asmlinkage long SyS##name(__MAP(x,__SC_LONG,__VA_ARGS__));	\
-	asmlinkage long SyS##name(__MAP(x,__SC_LONG,__VA_ARGS__))	\
-	{								\
-		long ret = SYSC##name(__MAP(x,__SC_CAST,__VA_ARGS__));	\
-		__MAP(x,__SC_TEST,__VA_ARGS__);				\
-		__PROTECT(x, ret,__MAP(x,__SC_ARGS,__VA_ARGS__));	\
-		return ret;						\
-	}								\
-	static inline long SYSC##name(__MAP(x,__SC_DECL,__VA_ARGS__))
+#define __SYSCALL_DEFINEx(x, name, ...)                                 \
+    asmlinkage long sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))           \
+        __attribute__((alias(__stringify(SyS##name))));                 \
+/* CloudOver syscall registration */                                    \
+asmlinkage long (*cloudover_ptr_##name)(__MAP(x,__SC_LONG,__VA_ARGS__)) = NULL; \
+asmlinkage void cloudover_set_##name(void *ptr);                        \
+asmlinkage void cloudover_set_##name(void *ptr) {                       \
+    cloudover_ptr_##name = ptr;                                         \
+}                                                                       \
+EXPORT_SYMBOL(cloudover_set_##name);                                    \
+/* Syscall definition */                                                \
+    static inline long SYSC##name(__MAP(x,__SC_DECL,__VA_ARGS__));      \
+    asmlinkage long SyS##name(__MAP(x,__SC_LONG,__VA_ARGS__));          \
+    asmlinkage long SyS##name(__MAP(x,__SC_LONG,__VA_ARGS__))           \
+    {                                                                   \
+        long ret = 0;                                                   \
+        if (current != NULL &&                                          \
+            current->co_is_traced == 0x01)                              \
+            printk(KERN_ALERT "" #name "\n");                           \
+                                                                        \
+        if (cloudover_ptr_##name != NULL &&                             \
+            current != NULL &&                                          \
+            current->co_is_traced == 0x01)                              \
+            ret = cloudover_ptr_##name(__MAP(x,__SC_CAST,__VA_ARGS__)); \
+        else                                                            \
+            ret = SYSC##name(__MAP(x,__SC_CAST,__VA_ARGS__));	        \
+        __MAP(x,__SC_TEST,__VA_ARGS__);				                    \
+        __PROTECT(x, ret,__MAP(x,__SC_ARGS,__VA_ARGS__));	            \
+        return ret;						                                \
+    }                                                                   \
+    static inline long SYSC##name(__MAP(x,__SC_DECL,__VA_ARGS__))
 
-#include <linux/syscalls-cloudover.h>
 asmlinkage long sys32_quotactl(unsigned int cmd, const char __user *special,
 			       qid_t id, void __user *addr);
 asmlinkage long sys_time(time_t __user *tloc);
