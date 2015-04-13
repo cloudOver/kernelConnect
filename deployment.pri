@@ -209,7 +209,6 @@ HEADERS += \
     $$PWD/syscalls-kernel.h \
     $$PWD/syscalls-cloudover.h \
     $$PWD/patch/linux/sched.h \
-    $$PWD/patch/linux/syscalls-cloudover.h \
     $$PWD/patch/linux/syscalls.h
 
 OTHER_FILES += \
