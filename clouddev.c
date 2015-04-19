@@ -20,16 +20,17 @@ along with KernelConnect.  If not, see <http://www.gnu.org/licenses/>.
 #include "clouddev.h"
 
 static ssize_t dev_read(struct file *filp, char __user *data, size_t size, loff_t *offset) {
+    struct message *msg;
     printk(KERN_DEBUG "dev_read: read\n");
 
-    struct message *msg = message_get_sent();
+    msg = message_get_sent();
     if (msg == NULL) {
         printk(KERN_CRIT "dev_read: cannot get next message\n");
         return 0;
     }
 
     if (msg->size > size) {
-        printk(KERN_INFO "dev_read: not enough space to copy message (%d). Message is %ud\n", size, msg->size);
+        printk(KERN_INFO "dev_read: not enough space to copy message (%lu). Message is %zu\n", size, msg->size);
         return -EAGAIN;
     }
 
@@ -41,12 +42,14 @@ static ssize_t dev_read(struct file *filp, char __user *data, size_t size, loff_
 
 
 static ssize_t dev_write(struct file *filp, const char __user *data, size_t size, loff_t *offset) {
+    struct message *msg;
+    void *msg_data;
     printk(KERN_DEBUG "dev_write: write\n");
-    void *msg_data = kmalloc(size, GFP_KERNEL);
+    msg_data = kmalloc(size, GFP_KERNEL);
 
-    struct message *msg = message_new(msg_data, size);
+    msg = message_new(msg_data, size);
 
-    printk(KERN_DEBUG "Message pid size: %d\n", sizeof(msg->pid));
+    printk(KERN_DEBUG "Message pid size: %lu\n", sizeof(msg->pid));
 
     copy_from_user(&msg->pid, data, sizeof(msg->pid));
     copy_from_user(&msg->data, data + sizeof(msg->pid), size - sizeof(msg->pid));
@@ -73,8 +76,9 @@ static struct file_operations fops = {
     .release = dev_release,
 };
 
-int device_init() {
-    int dev = register_chrdev(109, "kernelconect", &fops);
+int device_init(void) {
+    int dev;
+    dev = register_chrdev(109, "kernelconect", &fops);
     if (dev >= 0) {
         printk(KERN_INFO "registered kernelConnect device with major %d\n", dev);
         return 0;
@@ -84,6 +88,6 @@ int device_init() {
     }
 }
 
-void device_cleanup() {
+void device_cleanup(void) {
     unregister_chrdev(109, "kernelconnect");
 }

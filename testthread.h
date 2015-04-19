@@ -25,7 +25,7 @@ along with KernelConnect.  If not, see <http://www.gnu.org/licenses/>.
 #include <linux/delay.h>
 
 
-struct task_struct *test_init();
+struct task_struct *test_init(void);
 
 void test_send(void *data);
 

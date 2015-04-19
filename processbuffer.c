@@ -36,7 +36,7 @@ struct message *message_new(void *data, unsigned long size) {
     msg->pid = task_pid_nr(current);
 
     INIT_LIST_HEAD(&msg->list);
-    printk(KERN_DEBUG "message_new: created new message for pid %d at %p (%ul bytes, at %p)\n", msg->pid, msg, msg->size, msg->data);
+    printk(KERN_DEBUG "message_new: created new message for pid %d at %p (%lu bytes, at %p)\n", msg->pid, msg, msg->size, msg->data);
     return msg;
 }
 

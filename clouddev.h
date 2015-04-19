@@ -25,7 +25,7 @@ along with KernelConnect.  If not, see <http://www.gnu.org/licenses/>.
 #include <asm/errno.h>
 #include <processbuffer.h>
 
-int device_init();
-void device_cleanup();
+int device_init(void);
+void device_cleanup(void);
 
 #endif // CLOUDDEV_H
