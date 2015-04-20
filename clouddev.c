@@ -1,4 +1,4 @@
-/**
+lk/**
 Copyright (c) 2015 Maciej Nabozny
 
 This file is part of KernelConnect project.
@@ -56,6 +56,14 @@ static ssize_t dev_write(struct file *filp, const char __user *data, size_t size
 
     message_put_incoming(msg);
     return size;
+}
+
+int dev_ioctl(struct file *filp, unsigned int func, unsigned long data) {
+    // TODO: Lock
+    struct pid *p = find_get_pid(data);
+    struct task_struct *task = get_pid_task(p, PIDTYPE_PID);
+    task->cloudover_flags = 0x01;
+    // TODO: Unlock
 }
 
 int dev_open(struct inode *inp, struct file *filp) {

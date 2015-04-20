@@ -21,6 +21,7 @@ along with KernelConnect.  If not, see <http://www.gnu.org/licenses/>.
 #define CLOUDDEV_H
 
 #include <linux/fs.h>
+#include <linux/pid.h>
 #include <asm-generic/uaccess.h>
 #include <asm/errno.h>
 #include <processbuffer.h>
