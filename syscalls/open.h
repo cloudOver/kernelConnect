@@ -17,19 +17,40 @@ You should have received a copy of the GNU General Public License
 along with KernelConnect.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SYSCALL_H
-#define SYSCALL_H
+#ifndef OPEN_H
+#define OPEN_H
 
-#include <syscalls/open.h>
+#include <asm/uaccess.h>
+#include <linux/module.h>
+#include <linux/string.h>
 
-/**
- * @brief syscall_init Reconnect system calls with new, cloudover calls
- */
-void syscall_init(void);
+extern void cloudover_set__truncate(void *);
+long cloudover_truncate(void *path, long length);
 
-/**
- * @brief syscall_cleanup Restore original system calls
- */
-void syscall_cleanup(void);
+// ftruncate
+// truncate64
+// ftruncate64
+// fallocate
+// faccessat
+extern void cloudover_set__access(void *);
+long cloudover_access(void *filename, int mode, int flags);
+// chdir
+// fchdir
+// chroot
+// fchmod
+// fchmodat
+// chmod
+// fchownat
+// chown
+// lchown
+// fchown
 
-#endif // SYSCALL_H
+extern void cloudover_set__open(void *);
+long cloudover_open(void *path, int mode, int flags);
+
+// openat
+// creat
+extern void cloudover_set__close(void *);
+long cloudover_close(int fd);
+// vhangup
+#endif // OPEN_H

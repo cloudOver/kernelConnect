@@ -23,7 +23,7 @@ static int thread_count = 0;
 char str[] = "Hello world!";
 
 struct task_struct *test_init(void) {
-    static struct task_struct *test_thread;
+    struct task_struct *test_thread;
 
     thread_count += 1;
     test_thread = kthread_run(test_send, (void *)thread_count, "kernelConnect_test_%d", thread_count);

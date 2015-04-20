@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with KernelConnect.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <syscalls/open.h>
 #include <proto/syscall.h>
 
 long cloudover_truncate(void *path, long length) {

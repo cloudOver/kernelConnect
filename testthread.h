@@ -27,7 +27,7 @@ along with KernelConnect.  If not, see <http://www.gnu.org/licenses/>.
 
 struct task_struct *test_init(void);
 
-void test_send(void *data);
+int test_send(void *data);
 
 void test_cleanup(struct task_struct *thread);
 
