@@ -20,7 +20,7 @@ along with KernelConnect.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPEN_H
 #define OPEN_H
 
-#include <asm/uaccess.h>
+#include <asm-generic/uaccess.h>
 #include <linux/module.h>
 #include <linux/string.h>
 

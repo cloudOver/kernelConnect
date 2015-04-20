@@ -61,7 +61,7 @@ struct co_syscall_context {
  * @param sock Zmq socket for system calls
  * @return Returns new context structure
  */
-extern struct co_syscall_context* co_syscall_initialize();
+extern struct co_syscall_context* co_syscall_initialize(void);
 
 /**
  * @brief co_syscall_cleanup
