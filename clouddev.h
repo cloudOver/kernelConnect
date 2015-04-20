@@ -20,8 +20,8 @@ along with KernelConnect.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CLOUDDEV_H
 #define CLOUDDEV_H
 
-#include <linux/fs.h>
 #include <linux/pid.h>
+#include <linux/fs.h>
 #include <asm-generic/uaccess.h>
 #include <asm/errno.h>
 #include <processbuffer.h>

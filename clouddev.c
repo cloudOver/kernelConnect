@@ -1,4 +1,4 @@
-lk/**
+/**
 Copyright (c) 2015 Maciej Nabozny
 
 This file is part of KernelConnect project.
@@ -60,10 +60,16 @@ static ssize_t dev_write(struct file *filp, const char __user *data, size_t size
 
 int dev_ioctl(struct file *filp, unsigned int func, unsigned long data) {
     // TODO: Lock
-    struct pid *p = find_get_pid(data);
-    struct task_struct *task = get_pid_task(p, PIDTYPE_PID);
+    struct pid *p;
+    struct task_struct *task;
+
+    printk(KERN_INFO "dev_ioctl: ");
+
+    p = find_get_pid(data);
+    task = get_pid_task(p, PIDTYPE_PID);
     task->cloudover_flags = 0x01;
     // TODO: Unlock
+    return 0;
 }
 
 int dev_open(struct inode *inp, struct file *filp) {
@@ -82,16 +88,17 @@ static struct file_operations fops = {
     .read = dev_read,
     .write = dev_write,
     .release = dev_release,
+    .unlocked_ioctl = dev_ioctl,
 };
 
 int device_init(void) {
     int dev;
     dev = register_chrdev(109, "kernelconect", &fops);
     if (dev >= 0) {
-        printk(KERN_INFO "registered kernelConnect device with major %d\n", dev);
+        printk(KERN_INFO "device_init: registered kernelConnect device with major %d\n", dev);
         return 0;
     } else {
-        printk(KERN_CRIT "failed to register kernelConnect device: %d\n", dev);
+        printk(KERN_CRIT "device_init: failed to register kernelConnect device: %d\n", dev);
         return -1;
     }
 }

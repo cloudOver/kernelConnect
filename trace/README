@@ -1,0 +1,5 @@
+Trace is simple program to execute "/bin/cat /etc/passwd". It forks, ioctls the
+/dev/cloudover and makes child process cloudover traceable.
+
+Compilation:
+gcc -o trace trace.c
