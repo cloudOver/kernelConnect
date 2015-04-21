@@ -63,11 +63,21 @@ int dev_ioctl(struct file *filp, unsigned int func, unsigned long data) {
     struct pid *p;
     struct task_struct *task;
 
-    printk(KERN_INFO "dev_ioctl: ");
+    if (func == CLOUDDEV_TRACE_ENABLE) {
+        printk(KERN_INFO "dev_ioctl: trace enable for pid %d\n", data);
 
-    p = find_get_pid(data);
-    task = get_pid_task(p, PIDTYPE_PID);
-    task->cloudover_flags = 0x01;
+        p = find_get_pid(data);
+        task = get_pid_task(p, PIDTYPE_PID);
+        task->cloudover_flags = 0x01;
+    } else if (func == CLOUDDEV_TRACE_DISABLE) {
+        printk(KERN_INFO "dev_ioctl: trace enable for pid %d\n", data);
+
+        p = find_get_pid(data);
+        task = get_pid_task(p, PIDTYPE_PID);
+        task->cloudover_flags = 0x00;
+    } else {
+        printk(KERN_ALERT "dev_ioctl: unknown command %x\n", func);
+    }
     // TODO: Unlock
     return 0;
 }

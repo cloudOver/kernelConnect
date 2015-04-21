@@ -26,6 +26,11 @@ along with KernelConnect.  If not, see <http://www.gnu.org/licenses/>.
 #include <asm/errno.h>
 #include <processbuffer.h>
 
+enum cloud_dev_action {
+    CLOUDDEV_TRACE_ENABLE,
+    CLOUDDEV_TRACE_DISABLE,
+};
+
 int device_init(void);
 void device_cleanup(void);
 

@@ -20,6 +20,7 @@ along with KernelConnect.  If not, see <http://www.gnu.org/licenses/>.
 #include <syscall.h>
 
 void syscall_init(void) {
+    printk(KERN_INFO "syscall_init: eplacing syscalls\n");
     cloudover_set__open((void *)cloudover_open);
     cloudover_set__close((void *)cloudover_close);
     cloudover_set__truncate((void *)cloudover_truncate);

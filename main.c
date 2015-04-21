@@ -35,14 +35,16 @@ static struct task_struct *thread = NULL;
 
 int kernelConnect_init(void) {
     device_init();
-    thread = test_init();
+    syscall_init();
+    //thread = test_init();
 
     return 0;
 }
 
 void kernelConnect_exit(void) {
+    syscall_cleanup();
     device_cleanup();
-    test_cleanup(thread);
+    //test_cleanup(thread);
 }
 
 

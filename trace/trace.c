@@ -7,6 +7,7 @@
 int main(int argc, char *argv[]) {
 	int pid = fork();
 	if (pid > 0) {
+		fprintf(stderr, "Tracing pid %d\n", pid);
 		int cloud = open("/dev/cloudover", O_RDONLY);
 		if (cloud < 0) {
 			fprintf(stderr, "Cannot open cloudover dev\n");

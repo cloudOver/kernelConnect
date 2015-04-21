@@ -208,7 +208,7 @@ asmlinkage long SyS##name(__MAP(x,__SC_LONG,__VA_ARGS__))	\
 	long ret = 0;                                                   \
 	if (current != NULL &&                                          \
 		current->cloudover_flags & 0x01)                        \
-		printk(KERN_ALERT "" #name "\n");                       \
+		printk(KERN_DEBUG "" #name "\n");                       \
                                                                         \
 	if (cloudover_ptr_##name != NULL &&                             \
 		current != NULL &&                                          \
