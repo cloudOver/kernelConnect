@@ -37,7 +37,7 @@ static ssize_t dev_read(struct file *filp, char __user *data, size_t size, loff_
     copy_to_user(data, msg->data, msg->size);
 
     message_destroy(msg);
-    return size;
+    return msg->size;
 }
 
 
@@ -57,6 +57,7 @@ static ssize_t dev_write(struct file *filp, const char __user *data, size_t size
     message_put_incoming(msg);
     return size;
 }
+
 
 int dev_ioctl(struct file *filp, unsigned int func, unsigned long data) {
     // TODO: Lock
@@ -83,10 +84,12 @@ int dev_ioctl(struct file *filp, unsigned int func, unsigned long data) {
     return 0;
 }
 
+
 int dev_open(struct inode *inp, struct file *filp) {
     printk(KERN_DEBUG "dev_open: device opened\n");
     return 0;
 }
+
 
 int dev_release(struct inode *inp, struct file *filp) {
     printk(KERN_DEBUG "dev_release: device closed\n");
