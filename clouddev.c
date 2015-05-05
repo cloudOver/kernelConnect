@@ -34,7 +34,9 @@ static ssize_t dev_read(struct file *filp, char __user *data, size_t size, loff_
         return -EAGAIN;
     }
 
-    copy_to_user(data, msg->data, msg->size);
+
+    copy_to_user(data, &msg->pid, sizeof(msg->pid));
+    copy_to_user(data+sizeof(msg->pid), msg->data, msg->size);
 
     message_destroy(msg);
     return msg->size;
@@ -63,7 +65,6 @@ int dev_ioctl(struct file *filp, unsigned int func, unsigned long data) {
     // TODO: Lock
     struct pid *p;
     struct task_struct *task;
-    struct co_pid *info;
 
     if (func == CLOUDDEV_TRACE_ENABLE) {
         printk(KERN_INFO "dev_ioctl: trace enable for pid %d\n", data);

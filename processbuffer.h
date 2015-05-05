@@ -32,7 +32,7 @@ along with KernelConnect.  If not, see <http://www.gnu.org/licenses/>.
  * message_destroy functions to create or remove message.
  */
 struct message {
-    int pid;
+    unsigned int pid;
     unsigned long size;
     void *data;
     struct list_head list;
