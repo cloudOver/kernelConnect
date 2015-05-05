@@ -198,7 +198,8 @@ SOURCES += \
     $$PWD/syscalls/open.c \
     $$PWD/syscalls/read_write.c \
     $$PWD/syscalls/stat.c \
-    $$PWD/syscall.c
+    $$PWD/syscall.c \
+    $$PWD/trace/trace.c
 
 HEADERS += \
     $$PWD/processbuffer.h \

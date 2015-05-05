@@ -62,6 +62,7 @@ int dev_ioctl(struct file *filp, unsigned int func, unsigned long data) {
     // TODO: Lock
     struct pid *p;
     struct task_struct *task;
+    struct co_pid *info;
 
     if (func == CLOUDDEV_TRACE_ENABLE) {
         printk(KERN_INFO "dev_ioctl: trace enable for pid %d\n", data);

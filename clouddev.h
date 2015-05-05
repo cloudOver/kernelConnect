@@ -31,6 +31,17 @@ enum cloud_dev_action {
     CLOUDDEV_TRACE_DISABLE,
 };
 
+/**
+ * @brief The co_pid struct Handles information aboud PID pair
+ */
+struct co_pid {
+    /// Pid in virtual machine (the exported process)
+    int cloud_pid;
+    /// Pid in client's operating systems, emulated by "plug"
+    int client_pid;
+};
+
+
 int device_init(void);
 void device_cleanup(void);
 
