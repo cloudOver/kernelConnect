@@ -28,8 +28,11 @@ static DEFINE_SPINLOCK(inc_buf_lock);
 
 struct message *message_new(void *data, unsigned long size) {
     struct message *msg = kmalloc(sizeof(struct message), GFP_KERNEL);
+
     if (msg == NULL)
         return NULL;
+
+    memset((void*)msg, 0x00, sizeof(struct message));
 
     msg->data = data;
     msg->size = size;
