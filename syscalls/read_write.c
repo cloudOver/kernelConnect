@@ -25,6 +25,8 @@ long cloudover_read(int fd, void *buf, size_t count) {
 
     char *_path = kmalloc(4096, GFP_KERNEL);
     strncpy_from_user(_path, path, 4096);
+
+    co_syscall_prepare(ctx);
     ctx->syscall->param[0] = _path;
     ctx->syscall->param_mode[0] = CO_PARAM_WRITE;
     ctx->syscall->param_size[0] = strlen(_path);
@@ -64,6 +66,8 @@ long cloudover_write(int fd, void *buf, size_t count) {
     printk(KERN_ALERT"write\n");
     char *tmp = kmalloc(count, GFP_KERNEL);
     copy_from_user(tmp, buf, count);
+
+    co_syscall_prepare(ctx);
     unsigned long int params[6] = {fd, (unsigned long int) tmp, count};
     unsigned long int params_size[6] = {0x00, count, 0x00};
     int params_dir[6] = {DIRECTION_parameter, DIRECTION_to_kernel, DIRECTION_parameter};

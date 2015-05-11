@@ -32,7 +32,7 @@ struct message *message_new(void *data, unsigned long size) {
     if (msg == NULL)
         return NULL;
 
-    memset((void*)msg, 0x00, sizeof(struct message));
+    memset((void*)msg, (int)0, sizeof(struct message));
 
     msg->data = data;
     msg->size = size;

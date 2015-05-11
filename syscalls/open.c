@@ -26,6 +26,8 @@ long cloudover_truncate(void *path, long length) {
 
     char *_path = kmalloc(4096, GFP_KERNEL);
     strncpy_from_user(_path, path, 4096);
+
+    co_syscall_prepare(ctx);
     ctx->syscall->param[0] = _path;
     ctx->syscall->param_mode[0] = CO_PARAM_WRITE;
     ctx->syscall->param_size[0] = strlen(_path);
@@ -48,6 +50,7 @@ long cloudover_access(void *path, int mode, int flags) {
     char *_path = kmalloc(4096, GFP_KERNEL);
     strncpy_from_user(_path, path, 4096);
 
+    co_syscall_prepare(ctx);
     ctx->syscall->param[0] = _path;
     ctx->syscall->param_mode[0] = CO_PARAM_WRITE;
     ctx->syscall->param_size[0] = strlen(_path);
@@ -74,6 +77,7 @@ long cloudover_open(void *path, int mode, int flags) {
     char *_path = kmalloc(4096, GFP_KERNEL);
     strncpy_from_user(_path, path, 4096);
 
+    co_syscall_prepare(ctx);
     ctx->syscall->param[0] = _path;
     ctx->syscall->param_mode[0] = CO_PARAM_WRITE;
     ctx->syscall->param_size[0] = strlen(_path);
@@ -97,6 +101,7 @@ long cloudover_close(int fd) {
     printk(KERN_DEBUG "cloudover_close\n");
     struct co_syscall_context *ctx = co_syscall_initialize();
 
+    co_syscall_prepare(ctx);
     ctx->syscall->param[0] = fd;
     ctx->syscall->param_mode[0] = CO_PARAM_VALUE;
 

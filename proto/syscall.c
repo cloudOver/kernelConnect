@@ -26,6 +26,8 @@ struct co_syscall_context* co_syscall_initialize(void) {
         return NULL;
     }
 
+    memset(ctx->syscall, 0, sizeof(struct co_syscall_data));
+
     ctx->syscall_id = 0;
     ctx->syscall = (struct co_syscall_data*) kmalloc(sizeof(struct co_syscall_data), GFP_KERNEL);
 
@@ -83,4 +85,12 @@ int co_syscall_deserialize(struct co_syscall_context *ctx) {
     }
 
     return ctx->syscall_id;
+}
+
+void co_syscall_prepare(struct co_syscall_context *ctx) {
+    int i;
+    memset(ctx->syscall, 0x00, sizeof(struct co_syscall_data));
+    for (i = 0; i < 6; i++) {
+        ctx->syscall->param_mode[i] = CO_PARAM_VALUE;
+    }
 }

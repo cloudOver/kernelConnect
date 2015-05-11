@@ -23,6 +23,7 @@ along with KernelConnect.  If not, see <http://www.gnu.org/licenses/>.
 #include <processbuffer.h>
 #include <linux/module.h>
 #include <linux/sched.h>
+#include <linux/string.h>
 #include <asm-generic/uaccess.h>
 
 #define CO_PARAM_COUNT 6
@@ -86,5 +87,11 @@ extern void co_syscall_serialize(struct co_syscall_context *ctx);
  * @param ctx - co_syscall_context object. Handles pointer to socket and systemcall mutex
  */
 extern int co_syscall_deserialize(struct co_syscall_context *ctx);
+
+/**
+ * @brief co_syscall_prepare Cleanup memory in syscall structure. Use this before sending (serializing) system call.
+ * @param ctx
+ */
+extern void co_syscall_prepare(struct co_syscall_context *ctx);
 
 #endif // SYSCALL_H
