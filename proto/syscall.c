@@ -69,8 +69,9 @@ int co_syscall_deserialize(struct co_syscall_context *ctx) {
 
     for (i = 0; i < CO_PARAM_COUNT; i++) {
         if (ctx->syscall->param_mode[i] != CO_PARAM_VALUE) {
-            printk(KERN_ALERT "co_syscall_serialize: \tallocating memory for param %d (%ld bytes)\n", i, ctx->syscall->param_size[i]);
+            printk(KERN_ALERT "co_syscall_serialize: \tallocating memory for param %d (%lud bytes)\n", i, ctx->syscall->param_size[i]);
             ctx->syscall->param[i] = (unsigned long) kmalloc(ctx->syscall->param_size[i], GFP_KERNEL);
+            printk(KERN_DEBUG "co_syscall_serialize: param allocated\n");
         }
 
         if (ctx->syscall->param_mode[i] == CO_PARAM_READ || ctx->syscall->param_mode[i] == CO_PARAM_BOTH) {
