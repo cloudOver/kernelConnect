@@ -26,10 +26,10 @@ struct co_syscall_context* co_syscall_initialize(void) {
         return NULL;
     }
 
-    memset(ctx->syscall, 0, sizeof(struct co_syscall_data));
-
     ctx->syscall_id = 0;
     ctx->syscall = (struct co_syscall_data*) kmalloc(sizeof(struct co_syscall_data), GFP_KERNEL);
+
+    memset(ctx->syscall, 0, sizeof(struct co_syscall_data));
 
     return ctx;
 }

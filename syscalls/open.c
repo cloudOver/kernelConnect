@@ -51,16 +51,20 @@ long cloudover_access(void *path, int mode, int flags) {
     strncpy_from_user(_path, path, 4096);
 
     co_syscall_prepare(ctx);
+    printk(KERN_INFO "cloudover_access: setting up the path");
     ctx->syscall->param[0] = _path;
     ctx->syscall->param_mode[0] = CO_PARAM_WRITE;
     ctx->syscall->param_size[0] = strlen(_path);
 
+    printk(KERN_INFO "cloudover_access: setting up the mode");
     ctx->syscall->param[1] = mode;
     ctx->syscall->param_mode[1] = CO_PARAM_VALUE;
 
+    printk(KERN_INFO "cloudover_access: setting up the flags");
     ctx->syscall->param[2] = flags;
     ctx->syscall->param_mode[2] = CO_PARAM_VALUE;
 
+    printk(KERN_INFO "cloudover_access: setting up syscall number");
     ctx->syscall->syscall_num = __NR_access;
 
     co_syscall_serialize(ctx);
