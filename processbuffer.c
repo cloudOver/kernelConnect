@@ -97,6 +97,8 @@ struct message *message_get() {
             }
         }
         spin_unlock_irqrestore(&inc_buf_lock, flags);
+
+        set_current_state(TASK_INTERRUPTIBLE);
         schedule();
     }
     spin_unlock_irqrestore(&inc_buf_lock, flags);
@@ -105,8 +107,18 @@ struct message *message_get() {
 
 void message_put_incoming(struct message *msg) {
     unsigned long flags;
+    struct pid *p;
+    struct task_struct *task;
+
     spin_lock_irqsave(&inc_buf_lock, flags);
     printk(KERN_DEBUG "message_put_incoming: received new message for PID %d at %p\n", msg->pid, msg->data);
     list_add_tail(&msg->list, &incoming_buffer);
+
+    printk(KERN_DEBUG "message_put_incoming: waking up pid %d\n", msg->pid);
+    p = find_get_pid(msg->pid);
+    task = get_pid_task(p, PIDTYPE_PID);
+    wake_up_process(task);
+    printk(KERN_DEBUG "message_put_incoming: wake up done\n");
+
     spin_unlock_irqrestore(&inc_buf_lock, flags);
 }
