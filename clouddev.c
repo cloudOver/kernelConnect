@@ -21,11 +21,9 @@ along with KernelConnect.  If not, see <http://www.gnu.org/licenses/>.
 
 static ssize_t dev_read(struct file *filp, char __user *data, size_t size, loff_t *offset) {
     struct message *msg;
-    printk(KERN_DEBUG "dev_read: read\n");
 
     msg = message_get_sent();
     if (msg == NULL) {
-        printk(KERN_CRIT "dev_read: cannot get next message\n");
         return 0;
     }
 
