@@ -58,7 +58,7 @@ void message_destroy(struct message *msg);
 
 /**
  * @brief message_send Put new message into outgoing buffer. Used by all
- * redirected systemcalls acroos the kernel
+ * redirected systemcalls across the kernel
  * @param msg
  */
 void message_send(struct message *msg);

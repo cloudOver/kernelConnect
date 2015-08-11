@@ -63,9 +63,15 @@ int co_syscall_deserialize(struct co_syscall_context *ctx) {
     struct message *param;
     int i;
     msg = message_get();
+    if (msg->size < sizeof(struct co_syscall_data)) {
+        printk(KERN_ALERT "co_syscall_deserialize: message too small!\n");
+        return 0;
+    }
+
+    memcpy(ctx->syscall, msg->data, sizeof(struct co_syscall_data));
 
     ctx->syscall_id += 1;
-    printk(KERN_DEBUG "co_syscall_deserialize: received syscall: %ld\n", ctx->syscall->syscall_num);
+    printk(KERN_DEBUG "co_syscall_deserialize: received syscall: %ud\n", ctx->syscall->syscall_num);
 
     for (i = 0; i < CO_PARAM_COUNT; i++) {
         if (ctx->syscall->param_mode[i] == CO_PARAM_READ) {

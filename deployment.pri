@@ -199,7 +199,8 @@ SOURCES += \
     $$PWD/syscalls/read_write.c \
     $$PWD/syscalls/stat.c \
     $$PWD/syscall.c \
-    $$PWD/trace/trace.c
+    $$PWD/trace/trace.c \
+    $$PWD/syscalls/mmap.c
 
 HEADERS += \
     $$PWD/processbuffer.h \
@@ -211,7 +212,8 @@ HEADERS += \
     $$PWD/syscalls-cloudover.h \
     $$PWD/patch/linux/sched.h \
     $$PWD/patch/linux/syscalls.h \
-    $$PWD/syscalls/open.h
+    $$PWD/syscalls/open.h \
+    $$PWD/syscalls/mmap.h
 
 OTHER_FILES += \
     $$PWD/patch/linux/sched.patch \
